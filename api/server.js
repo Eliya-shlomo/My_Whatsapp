@@ -1,44 +1,37 @@
-// api/server.js
-import express, { json } from 'express';
+import 'dotenv/config';
+import express from 'express';
 import { createServer } from 'http';
-import socketIo from 'socket.io';
 import { connect } from 'mongoose';
-import authRoutes from './routes/auth';
-import messageRoutes from './routes/messages';
-import userRoutes from './routes/users';
+import authRoutes from './routes/auth.js';
+import messageRoutes from './routes/messages.js';
+import userRoutes from './routes/users.js';
+import configureSocket from './socket.js';
 
 const app = express();
 const server = createServer(app);
-const io = socketIo(server);
 
 // Middleware
-app.use(json());
+app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
 
-// Socket.IO
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('message', (msg) => {
-    io.emit('message', msg);
-  });
-});
+// Configure Socket.IO
+configureSocket(server);
 
 // MongoDB Connection
-connect('mongodb://mongo-service:27017/whatsapp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
+const mongoURI = 'mongodb://localhost:27017/whatsapp';
+
+// Log the MONGO_URI to verify it's being read correctly
+console.log('MONGO_URI:', mongoURI);
+
+connect(mongoURI)
+.then(() => {
   console.log('Connected to MongoDB');
-}).catch((err) => {
+})
+.catch((err) => {
   console.error('Error connecting to MongoDB', err);
 });
 

@@ -1,12 +1,34 @@
 // components/ChatList.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const ChatList = ({ setCurrentChat }) => {
-  // Add chat list logic here
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    // Fetch chat list from the server
+    const fetchChats = async () => {
+      try {
+        const response = await axios.get('/api/chats');
+        setChats(response.data);
+      } catch (error) {
+        console.error('Error fetching chats', error);
+      }
+    };
+
+    fetchChats();
+  }, []);
+
   return (
     <div>
       <h2>Chats</h2>
-      {/* Render chat items here */}
+      <ul>
+        {chats.map((chat) => (
+          <li key={chat._id} onClick={() => setCurrentChat(chat)}>
+            {chat.name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

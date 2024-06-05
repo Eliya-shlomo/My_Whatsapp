@@ -6,7 +6,12 @@ const NavBar = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    // Add logout logic here
+    // Clear stored authentication tokens
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+
+    // Redirect to login page
     router.push('/login');
   };
 

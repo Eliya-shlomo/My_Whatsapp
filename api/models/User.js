@@ -1,10 +1,14 @@
-// api/models/User.js
-import { Schema, model } from 'mongoose';
+import {mongoose} from 'mongoose';
 
-const userSchema = new Schema({
-  username: String,
+const userSchema = new mongoose.Schema({
+  email: String,
   password: String,
-  // Add other user fields here
 });
 
-export default model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+export async function findOne(query) {
+  return User.findOne(query);
+}
+
+export default User;
