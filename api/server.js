@@ -3,6 +3,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { connect } from 'mongoose';
 import authRoutes from './routes/auth.js';
+import chatRoutes from './routes/chat.js'; 
 import messageRoutes from './routes/messages.js';
 import userRoutes from './routes/users.js';
 import configureSocket from './socket.js';
@@ -17,23 +18,23 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/chats', chatRoutes); // Fixed typo from 'cahtRoutes'
 
 // Configure Socket.IO
 configureSocket(server);
 
 // MongoDB Connection
-const mongoURI = 'mongodb://localhost:27017/whatsapp';
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/My_whatsapp';
 
-// Log the MONGO_URI to verify it's being read correctly
 console.log('MONGO_URI:', mongoURI);
 
 connect(mongoURI)
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB', err);
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB', err);
+  });
 
 // Start Server
 const PORT = process.env.PORT || 3001;

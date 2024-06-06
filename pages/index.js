@@ -1,25 +1,25 @@
 // pages/index.js
-import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import ChatList from '../components/ChatList';
-import ChatWindow from '../components/ChatWindow';
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
-const socket = io();
-
-export default function Home() {
-  const [messages, setMessages] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
-
-  useEffect(() => {
-    socket.on('message', (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-    });
-  }, []);
+function HomePage() {
+  const { user, login, logout } = useAuth();
 
   return (
-    <div className="container mx-auto">
-      <ChatList setCurrentChat={setCurrentChat} />
-      {currentChat && <ChatWindow messages={messages} socket={socket} />}
+    <div>
+      {user ? (
+        <div>
+          <p>Welcome, {user.username}!</p>
+          <button onClick={logout}>Logout</button>
+        </div>
+      ) : (
+        <div>
+          <p>Please login</p>
+          <button onClick={() => login({ username: 'example_user' })}>Login</button>
+        </div>
+      )}
     </div>
   );
 }
+
+export default HomePage;
