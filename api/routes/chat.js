@@ -1,6 +1,8 @@
 // Import necessary modules
 import { Router } from 'express';
 const router = Router();
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Sample data representing chat list
 const chats = [

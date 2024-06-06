@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import User from '../models/User.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const router = Router();
 

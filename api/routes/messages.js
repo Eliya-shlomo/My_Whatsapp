@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import Message from '../models/Message.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const router = Router();
 

@@ -1,14 +1,33 @@
-import {mongoose} from 'mongoose';
+import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  email: String,
-  password: String,
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);
 
-export async function findOne(query) {
-  return User.findOne(query);
-}
+export const findOne = async (query) => {
+  try {
+    return await User.findOne(query);
+  } catch (error) {
+    console.error('Error in findOne:', error);
+    throw error;
+  }
+};
 
-export default User;
+export const createUser = async ({ username, password }) => {
+  try {
+    const newUser = new User({ username, password });
+    // Save the new user document to the database
+    await newUser.save();
+    return newUser; // Return the newly created user document
+  } catch (error) {
+    console.error('Error in createUser:', error);
+    throw error;
+  }
+};
+
+
+export default model('User', userSchema);

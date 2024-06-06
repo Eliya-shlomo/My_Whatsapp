@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import { createServer } from 'http';
 import { connect } from 'mongoose';
@@ -8,7 +9,9 @@ import messageRoutes from './routes/messages.js';
 import userRoutes from './routes/users.js';
 import configureSocket from './socket.js';
 
+
 const app = express();
+
 const server = createServer(app);
 
 // Middleware
@@ -18,7 +21,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/chats', chatRoutes); // Fixed typo from 'cahtRoutes'
+app.use('/api/chats', chatRoutes); 
 
 // Configure Socket.IO
 configureSocket(server);
@@ -41,3 +44,4 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
