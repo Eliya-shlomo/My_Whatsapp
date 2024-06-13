@@ -20,9 +20,9 @@ export const findOne = async (query) => {
 export const createUser = async ({ username, password }) => {
   try {
     const newUser = new User({ username, password });
-    // Save the new user document to the database
+
     await newUser.save();
-    return newUser; // Return the newly created user document
+    return newUser; 
   } catch (error) {
     console.error('Error in createUser:', error);
     throw error;

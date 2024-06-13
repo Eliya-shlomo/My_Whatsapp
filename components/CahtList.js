@@ -6,7 +6,6 @@ const ChatList = ({ setCurrentChat }) => {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    // Fetch chat list from the server
     const fetchChats = async () => {
       try {
         const response = await axios.get('/api/chats');

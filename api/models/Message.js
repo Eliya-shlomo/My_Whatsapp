@@ -1,11 +1,12 @@
-// api/models/Message.js
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-const messageSchema = new Schema({
+const messageSchema = new mongoose.Schema({
   text: { type: String, required: true },
-  sender: { type: String, required: true },
-  roomId: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  roomid: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
+  timestamp: { type: Date, default: Date.now }
 });
 
-export default model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
+
+export default Message;

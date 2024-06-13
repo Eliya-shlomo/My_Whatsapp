@@ -3,15 +3,13 @@ import User from '../models/User.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 const router = Router();
 
-// Get user information
-router.get('/:userId', async (req, res) => {
-  const { userId } = req.params;
+router.get('/:username', async (req, res) => {
+  const { username } = req.params;
 
   try {
-    const user = await User.findById(userId).select('-password');
+    const user = await User.findOne({ username }).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
