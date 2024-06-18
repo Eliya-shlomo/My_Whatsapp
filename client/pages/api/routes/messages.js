@@ -1,13 +1,13 @@
-import { Router } from 'express';
-import Message from '../models/Message.js';
+import nextConnect from 'next-connect';
+import Message from '../../../server/models/Message';
+import Room from '../../../server/models/Room';
 import dotenv from 'dotenv';
-import Room from '../models/room.js';
+
 dotenv.config();
 
-const router = Router();
+const handler = nextConnect();
 
-// Route to send a message
-router.post('/send', async (req, res) => {
+handler.post('/send', async (req, res) => {
   const { text, sender, roomid } = req.body;
 
   try {
@@ -26,8 +26,7 @@ router.post('/send', async (req, res) => {
   }
 });
 
-// Route to get messages for a room
-router.get('/roomMessages', async (req, res) => {
+handler.get('/roomMessages', async (req, res) => {
   const { roomid } = req.query;
 
   try {
@@ -46,8 +45,8 @@ router.get('/roomMessages', async (req, res) => {
     res.status(200).json(messages);
   } catch (error) {
     console.error('Error fetching messages:', error);
-    res.status(500).json({ message: 'Server errorrrrr', error });
+    res.status(500).json({ message: 'Server error', error });
   }
 });
 
-export default router;
+export default handler;

@@ -1,11 +1,12 @@
-import { Router } from 'express';
-import User from '../models/User.js';
+import nextConnect from 'next-connect';
+import User from '../../../server/models/User';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-const router = Router();
+const handler = nextConnect();
 
-router.get('/:username', async (req, res) => {
+handler.get('/:username', async (req, res) => {
   const { username } = req.params;
 
   try {
@@ -20,4 +21,4 @@ router.get('/:username', async (req, res) => {
   }
 });
 
-export default router;
+export default handler;
