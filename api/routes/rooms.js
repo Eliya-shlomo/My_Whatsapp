@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Room from '../models/room.js';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
+
 dotenv.config();
 
 const router = Router();
@@ -26,6 +27,25 @@ router.post('/private', async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 });
+
+
+router.get('/exsit', async (req,res) =>{
+  const {roomid} = req.body;
+
+  try{
+    const room = new Room.findOne(roomid);
+
+    if(!room){
+      res.status(490).json({message: 'rom doesent exsit'});
+    }
+    res.status(200).json({message: 'room  exsit'});
+  }
+  catch(error){
+    console.error('Error creating group room:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 
 router.post('/group', async (req, res) => {
   const { name, participants } = req.body;
@@ -72,6 +92,7 @@ router.post('/group/:roomId/add',async (req,res) =>{
     }
 
 }
+
 )
 
 export default router;
