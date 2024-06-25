@@ -2,13 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-import connectDB from './db.config.js';  
-
-import authRoutes from '../client/pages/api/routes/auth.js';
-import chatRoutes from '../client/pages/api/routes/chats.js';
-import messageRoutes from '../client/pages/api/routes/messages.js';
-import roomRoutes from '../client/pages/api/routes/rooms.js';
-import userRoutes from '../client/pages/api/routes/users.js';
+import connectDB from './config/db.config.js';  
 
 dotenv.config();
 
@@ -25,11 +19,16 @@ connectDB();
 
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/chats', chatRoutes);
-app.use('/api/messages', messageRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/users', userRoutes);
+const importRoute = async (routePath) => {
+  const { default: route } = await import(routePath);
+  return route;
+};
+
+app.use('/api/auth', async (req, res, next) => (await importRoute('../pages/api/routes/auth.js'))(req, res, next));
+app.use('/api/chats', async (req, res, next) => (await importRoute('../pages/api/routes/chats.js'))(req, res, next));
+app.use('/api/messages', async (req, res, next) => (await importRoute('../pages/api/routes/messages.js'))(req, res, next));
+app.use('/api/rooms', async (req, res, next) => (await importRoute('../pages/api/routes/rooms.js'))(req, res, next));
+app.use('/api/users', async (req, res, next) => (await importRoute('../pages/api/routes/users.js'))(req, res, next));
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);

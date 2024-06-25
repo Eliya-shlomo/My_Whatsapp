@@ -1,9 +1,8 @@
-import { Router } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { findOne, createUser } from '../../../server/models/User';
-import dotenv from 'dotenv';
-import nextConnect from 'next-connect';
+const nextConnect = require('next-connect');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const { findOne, createUser } = require('../../../server/models/User.js');
 
 dotenv.config();
 
@@ -55,4 +54,4 @@ handler.post('/register', async (req, res) => {
   }
 });
 
-export default handler;
+module.exports = handler;

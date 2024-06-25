@@ -1,7 +1,7 @@
-import nextConnect from 'next-connect';
-import Message from '../../../server/models/Message';
-import Room from '../../../server/models/Room';
-import dotenv from 'dotenv';
+const nextConnect = require('next-connect');
+const dotenv = require('dotenv');
+const Message = require('../../../server/models/Message.js');
+const Room = require('../../../server/models/room.js');
 
 dotenv.config();
 
@@ -49,4 +49,4 @@ handler.get('/roomMessages', async (req, res) => {
   }
 });
 
-export default handler;
+module.exports = handler;

@@ -1,5 +1,5 @@
-import nextConnect from 'next-connect';
-import dotenv from 'dotenv';
+const nextConnect = require('next-connect');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -8,7 +8,6 @@ const handler = nextConnect();
 const chats = [
   { _id: 1, name: 'Chat 1' },
   { _id: 2, name: 'Chat 2' },
-  // Add more chat objects as needed
 ];
 
 handler.get((req, res) => {
@@ -20,4 +19,4 @@ handler.get((req, res) => {
   }
 });
 
-export default handler;
+module.exports = handler;

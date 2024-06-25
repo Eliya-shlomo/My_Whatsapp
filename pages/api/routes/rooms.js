@@ -1,7 +1,7 @@
-import nextConnect from 'next-connect';
-import Room from '../../../server/models/Room';
-import User from '../../../server/models/User';
-import dotenv from 'dotenv';
+const nextConnect = require('next-connect');
+const dotenv = require('dotenv');
+const Room = require('../../../server/models/room.js');
+const User = require('../../../server/models/User.js');
 
 dotenv.config();
 
@@ -72,4 +72,4 @@ handler.post('/group/:roomId/add', async (req, res) => {
   }
 });
 
-export default handler;
+module.exports = handler;
