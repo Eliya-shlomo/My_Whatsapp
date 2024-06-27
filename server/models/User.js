@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { Schema, model } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -20,7 +19,6 @@ export const findOne = async (query) => {
 export const createUser = async ({ username, password }) => {
   try {
     const newUser = new User({ username, password });
-
     await newUser.save();
     return newUser; 
   } catch (error) {
@@ -29,5 +27,4 @@ export const createUser = async ({ username, password }) => {
   }
 };
 
-
-export default model('User', userSchema);
+export default User;

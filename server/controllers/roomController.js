@@ -1,17 +1,20 @@
-import Room from '../models/room';
-import User from '../models/User';
+import express from 'express';
+import Room from '../models/room.js';
+import User from '../models/User.js';
+
+const router = express.Router();
 
 export const createPrivateRoom = async (req, res) => {
   const { user1, user2 } = req.body;
 
   try {
-    let room = await Room.findOne({ 
-      participants: { $all: [user1, user2] }, 
-      isPrivate: true 
+    let room = await Room.findOne({
+      participants: { $all: [user1, user2] },
+      isPrivate: true
     });
 
     if (!room) {
-      room = new Room({ participants: [user1, user2] });
+      room = new Room({ participants: [user1, user2], isPrivate: true });
       await room.save();
     }
 
@@ -53,7 +56,7 @@ export const addUserToGroup = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(403).json({ message: 'User is not found in the database!' });
+      return res.status(403).json({ message: 'User not found' });
     }
 
     room.participants.push(userId);
@@ -65,3 +68,10 @@ export const addUserToGroup = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+// Define routes
+router.post('/private', createPrivateRoom);
+router.post('/group', createGroupRoom);
+router.put('/group/:roomId/add', addUserToGroup);
+
+export default router;

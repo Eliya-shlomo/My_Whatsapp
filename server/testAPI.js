@@ -1,23 +1,17 @@
 import axios from 'axios';
 
-async function sendLoginRequest() {
+async function testFetchRoomMessages() {
   try {
-    const response = await axios.get('http://localhost:3001/api/messages/exsit', {
-      
-      roomid:"666b421345948535d4a7d406"
-    
-    },
-    {
+    const response = await axios.get('http://localhost:3001/api/messages/roomMessages', {
+      params: { roomid: "667d9bc41d197d7557aafec3" },
       headers: { "Content-Type": "application/json" }
     });
-    console.log('Login successful!');
-    console.log('Token:', response.data.token);
-    console.log('User ID:', response.data.userId);
-    console.log('Username:', response.data.username);
+    console.log('Fetch messages successful!');
+    console.log('Messages:', response.data);
   } catch (error) {
-    console.error('Error during login:', error.response ? error.response.data : error.message);
+    console.error('Error fetching messages:', error.response ? error.response.data : error.message);
   }
 }
 
-// Call the function to send the login request
-sendLoginRequest();
+// Call the function to test fetching messages from the room
+testFetchRoomMessages();

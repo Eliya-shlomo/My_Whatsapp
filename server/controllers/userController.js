@@ -1,4 +1,7 @@
-import User from '../models/User';
+import express from 'express';
+import User from '../models/User.js';
+
+const router = express.Router();
 
 export const getUser = async (req, res) => {
   const { username } = req.params;
@@ -14,3 +17,7 @@ export const getUser = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+router.get('/:username', getUser);
+
+export default router;

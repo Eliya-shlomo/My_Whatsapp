@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const roomSchema = new mongoose.Schema({
-  name: { type: String }, 
+  name: { type: String },
   participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isPrivate: { type: Boolean, default: true }
 });

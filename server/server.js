@@ -2,7 +2,12 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-import connectDB from './config/db.config.js';  
+import connectDB from './config/db.config.js';
+import authRoutes from './controllers/authController.js';
+import chatRoutes from './controllers/chatController.js';
+import messageRoutes from './controllers/messageController.js';
+import roomRoutes from './controllers/roomController.js';
+import userRoutes from './controllers/userController.js';
 
 dotenv.config();
 
@@ -15,21 +20,26 @@ const io = new Server(server, {
   },
 });
 
+// Connect to database
 connectDB();
 
+// Middleware
 app.use(express.json());
 
-const importRoute = async (routePath) => {
-  const { default: route } = await import(routePath);
-  return route;
-};
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/users', userRoutes);
 
-app.use('/api/auth', async (req, res, next) => (await importRoute('../pages/api/routes/auth.js'))(req, res, next));
-app.use('/api/chats', async (req, res, next) => (await importRoute('../pages/api/routes/chats.js'))(req, res, next));
-app.use('/api/messages', async (req, res, next) => (await importRoute('../pages/api/routes/messages.js'))(req, res, next));
-app.use('/api/rooms', async (req, res, next) => (await importRoute('../pages/api/routes/rooms.js'))(req, res, next));
-app.use('/api/users', async (req, res, next) => (await importRoute('../pages/api/routes/users.js'))(req, res, next));
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
+// Socket.IO Connections
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
@@ -39,16 +49,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', async ({ roomId, message }) => {
-    const newMessage = new Message({
-      text: message.text,
-      sender: message.sender,
-      roomid: roomId,
-      timestamp: new Date(),
-    });
-
     try {
-      await newMessage.save();
+      const Message = await import('./models/Message.cjs');
+      const newMessage = new Message({
+        text: message.text,
+        sender: message.sender,
+        roomId: roomId,
+        timestamp: new Date(),
+      });
 
+      await newMessage.save();
       io.to(roomId).emit('receiveMessage', newMessage);
     } catch (error) {
       console.error('Error saving message to database:', error);
@@ -60,6 +70,7 @@ io.on('connection', (socket) => {
   });
 });
 
+// Start Server
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
