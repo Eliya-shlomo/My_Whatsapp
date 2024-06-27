@@ -1,64 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { fetchMessages, sendMessage } from '../services/api';
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:3001');
+import axios from 'axios';
 
 const ChatRoom = ({ roomId }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
-  const router = useRouter();
 
   useEffect(() => {
-    const getMessages = async () => {
+    const fetchMessages = async () => {
       try {
-        const data = await fetchMessages(roomId);
-        setMessages(data);
+        const response = await axios.get(`http://localhost:3001/api/messages/roomMessages?roomid=${roomId}`);
+        setMessages(response.data);
       } catch (error) {
-        console.error('Error fetching messages:', error.response?.data?.message);
+        console.error('Error fetching messages:', error.response ? error.response.data : error.message);
       }
     };
-
-    getMessages();
-
-    socket.emit('joinRoom', { roomId });
-
-    socket.on('receiveMessage', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    return () => {
-      socket.off('receiveMessage');
-    };
+    fetchMessages();
   }, [roomId]);
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    const message = { text, sender: 'user-id', roomid: roomId };
+  const handleSendMessage = async () => {
     try {
-      await sendMessage(message);
+      await axios.post('http://localhost:3001/api/messages/send', {
+        text,
+        sender: 'YOUR_USER_ID', // Replace with the actual user ID
+        roomid: roomId,
+      });
       setText('');
+      // Refresh messages
+      const response = await axios.get(`http://localhost:3001/api/messages/roomMessages?roomid=${roomId}`);
+      setMessages(response.data);
     } catch (error) {
-      console.error('Error sending message:', error.response?.data?.message);
+      console.error('Error sending message:', error.response ? error.response.data : error.message);
     }
   };
 
   return (
     <div>
-      <ul>
+      <h2>Chat Room</h2>
+      <div>
         {messages.map((message) => (
-          <li key={message._id}>{message.text}</li>
+          <div key={message._id}>
+            <strong>{message.sender.username}: </strong>
+            {message.text}
+          </div>
         ))}
-      </ul>
-      <form onSubmit={handleSendMessage}>
+      </div>
+      <div>
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          placeholder="Type a message..."
         />
-        <button type="submit">Send</button>
-      </form>
+        <button onClick={handleSendMessage}>Send</button>
+      </div>
     </div>
   );
 };

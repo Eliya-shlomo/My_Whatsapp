@@ -1,39 +1,38 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { registerUser } from '../services/api';
+import axios from 'axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await registerUser({ username, password });
-      console.log('Registration successful:', data);
-      router.push('/login');
+      await axios.post('http://localhost:3001/api/auth/register', {
+        username,
+        password,
+      });
+      alert('Registration successful!');
     } catch (error) {
-      console.error('Registration error:', error.response?.data?.message);
+      console.error('Error registering:', error.response ? error.response.data : error.message);
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Register</button>
-    </form>
+    <div>
+      <h2>Register</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Username:</label>
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <button type="submit">Register</button>
+      </form>
+    </div>
   );
 };
 
