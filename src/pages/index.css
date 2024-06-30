@@ -2,8 +2,22 @@ body {
     font-family: Arial, sans-serif;
   }
   
-  h2 {
+  h1, h2 {
     margin-top: 0;
+  }
+  
+  .app-container {
+    padding: 20px;
+  }
+  
+  .chat-page, .home-page, .login-page, .register-page {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 50px;
   }
   
   form {

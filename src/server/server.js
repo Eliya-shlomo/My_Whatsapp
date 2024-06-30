@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import connectDB from './config/db.config.js';
 import authRoutes from '../pages/controllers/authController.js';
 import chatRoutes from '../pages/controllers/chatController.js';
@@ -15,15 +16,27 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: 'http://localhost:3000', // Specify your frontend URL
     methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   },
 });
 
 // Connect to database
-connectDB();
+connectDB().then(() => {
+  console.log('Connected to the database');
+}).catch(error => {
+  console.error('Database connection error:', error);
+});
 
 // Middleware
+app.use(cors({
+  origin: 'http://localhost:3000', // Specify your frontend URL
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 app.use(express.json());
 
 // API Routes
@@ -50,7 +63,7 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', async ({ roomId, message }) => {
     try {
-      const Message = await import('./models/Message.cjs');
+      const Message = (await import('./models/Message.cjs')).default;
       const newMessage = new Message({
         text: message.text,
         sender: message.sender,

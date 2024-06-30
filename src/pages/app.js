@@ -5,6 +5,7 @@ import Register from './components/Register';
 import ChatList from './components/ChatList';
 import ChatRoom from './components/ChatRoom';
 import CreateRoom from './components/CreateRoom';
+import './App.css';
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -24,12 +25,12 @@ const App = () => {
   };
 
   if (!isClient) {
-    return null; // Or a loading spinner
+    return <div className="loading">Loading...</div>; // Loading spinner or message
   }
 
   return (
     <Router>
-      <div>
+      <div className="app-container">
         <Routes>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />

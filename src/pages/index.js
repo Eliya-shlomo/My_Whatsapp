@@ -1,26 +1,13 @@
-import { useState } from 'react';
-import Link from 'next/link';
-import Login from './components/Login';
-import Register from './components/Register';
+import React from 'react';
+import ClientOnly from '../components/ClientOnly';
+import Register from '../components/Register';  // or Login or other components needing BrowserRouter
 
-export default function Home() {
-  const [token, setToken] = useState(null);
-
-  const handleLogin = (token) => {
-    setToken(token);
-  };
-
+const HomePage = () => {
   return (
-    <div>
-      <h1>Welcome to My WhatsApp</h1>
-      {token ? (
-        <p>You are logged in. Proceed to <Link href="/chat">Chat</Link>.</p>
-      ) : (
-        <div>
-          <Login onLogin={handleLogin} />
-          <p>Don't have an account? <Link href="/register">Register</Link></p>
-        </div>
-      )}
-    </div>
+    <ClientOnly>
+      <Register />
+    </ClientOnly>
   );
-}
+};
+
+export default HomePage;

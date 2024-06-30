@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ChatList from './components/ChatList';
 import ChatRoom from './components/ChatRoom';
 
-export default function ChatPage() {
+const ChatPage = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const handleSelectChat = (roomId) => {
@@ -10,7 +10,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div>
+    <div className="chat-page">
       <h1>Chat</h1>
       {selectedRoom ? (
         <ChatRoom roomId={selectedRoom} />
@@ -19,4 +19,6 @@ export default function ChatPage() {
       )}
     </div>
   );
-}
+};
+
+export default ChatPage;

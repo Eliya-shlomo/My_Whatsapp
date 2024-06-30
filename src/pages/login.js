@@ -1,20 +1,8 @@
-import Login from './components/Login';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import React from 'react';
+import Login from '../components/Login';
 
-export default function LoginPage() {
-  const [token, setToken] = useState(null);
-  const router = useRouter();
+const LoginPage = () => {
+  return <Login />;
+};
 
-  const handleLogin = (token) => {
-    setToken(token);
-    router.push('/chat');
-  };
-
-  return (
-    <div>
-      <h1>Login</h1>
-      <Login onLogin={handleLogin} />
-    </div>
-  );
-}
+export default LoginPage;
