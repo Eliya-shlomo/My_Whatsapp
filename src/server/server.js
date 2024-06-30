@@ -3,11 +3,11 @@ import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import connectDB from './config/db.config.js';
-import authRoutes from './controllers/authController.js';
-import chatRoutes from './controllers/chatController.js';
-import messageRoutes from './controllers/messageController.js';
-import roomRoutes from './controllers/roomController.js';
-import userRoutes from './controllers/userController.js';
+import authRoutes from '../pages/controllers/authController.js';
+import chatRoutes from '../pages/controllers/chatController.js';
+import messageRoutes from '../pages/controllers/messageController.js';
+import roomRoutes from '../pages/controllers/roomController.js';
+import userRoutes from '../pages/controllers/userController.js';
 
 dotenv.config();
 

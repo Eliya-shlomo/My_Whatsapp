@@ -1,6 +1,6 @@
 import express from 'express';
-import Message from '../models/Message.js';
-import Room from '../models/room.js';
+import Message from '../../server/models/Message.js';
+import Room from '../../server/models/room.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
